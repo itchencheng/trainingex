@@ -42,18 +42,38 @@ def main():
 	print(train_data[0])
 	
 	''' plot '''
-	fig, ax = plt.subplots(1, 1)
+	fig, ax1 = plt.subplots(1,1, figsize=(15,10))
+	fig.subplots_adjust(right=0.8)
+
+	# ax1
+	ax1.plot(test_data[:,0], test_data[:,-1], color='blue', label="test_loss")
+	ax1.plot(train_data[:,0], train_data[:,-1], color='green', label="train_loss")
+	ax1.set_ylabel('loss')
+	ax1.set_xlabel('iteration')
 	
-	ax.plot(test_data[:,0], test_data[:,-1], color='blue', label="test_loss")
-	ax.plot(train_data[:,0], train_data[:,-1], color='black', label="train_loss")
-	ax.set_ylabel('loss')
-	ax.legend(loc=1)
-	
-	ax2 = ax.twinx()
-	ax2.plot(test_data[:,0], test_data[:,3], color='green', label="accuracy#1" )
-	#ax2.plot(test_data[:,0], test_data[:,4], color='red', label="accuracy#5" )
+	# ax2
+	ax2 = ax1.twinx()
+	lines = []
+	if(len(test_data[0]) > 5):
+		acc1, = ax2.plot(test_data[:,0], test_data[:,3], color='red', label="accuracy#1" )
+		acc5, = ax2.plot(test_data[:,0], test_data[:,4], color='yellow', label="accuracy#5" )
+		lines.append(acc1)
+		lines.append(acc5)
+	else:
+		acc1, = ax2.plot(test_data[:,0], test_data[:,3], color='red', label="accuracy#1" )
+		lines.append(acc1)
 	ax2.set_ylabel('acurracy')
-	ax2.legend(loc=2)
+	
+	# ax3
+	ax3 = ax1.twinx()
+	ax3.spines['right'].set_position( ('axes', 1.1) )
+	lr, = ax3.plot(train_data[:,0], train_data[:,2], color='black', label="LearningRate")
+	lines.append(lr)
+	ax3.set_ylabel('LearningRate')
+	
+	# legend
+	ax1.legend()
+	ax2.legend(lines, [l.get_label() for l in lines], loc="upper center")
 	
 	plt.show()
 	
